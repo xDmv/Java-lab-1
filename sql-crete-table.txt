@@ -1,0 +1,119 @@
+CREATE TABLE `roles` (
+    `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `type` char(255) NOT NULL,
+    `description` text(2000) NOT NULL
+) COLLATE 'utf8mb3_general_ci';
+
+CREATE TABLE `users` (
+    `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `first_name` varchar(255) NOT NULL,
+    `last_name` varchar(255) NOT NULL,
+    `comment` varchar(255),
+    `role_id` int NOT NULL,
+    `phone` varchar(255) NOT NULL,
+    `password` varchar(255) NOT NULL,
+    `description` text(3000),
+    `is_active` bit DEFAULT 1,
+    CONSTRAINT UC_tests2 UNIQUE (`email`),
+    INDEX role_id (role_id),
+    FOREIGN KEY (role_id) REFERENCES roles(id)
+) COLLATE 'utf8mb3_general_ci';
+
+CREATE TABLE `exhibits` (
+    `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `title` char(255) NOT NULL,
+    `description` text(3000) NOT NULL,
+    `specialist_id` int NOT NULL,
+    `price` decimal(8,2) NOT NULL DEFAULT 0,
+    `published` bit(1) NOT NULL DEFAULT 0,
+    INDEX user_ind (specialist_id),
+    FOREIGN KEY (specialist_id) REFERENCES users(id)
+) COLLATE 'utf8mb3_general_ci';
+
+CREATE TABLE `halls` (
+    `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `title` char(255) NOT NULL,
+    `description` text(2000) NOT NULL,
+    `exhibit_id` int NOT NULL,
+    `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+    INDEX service_ind (exhibit_id),
+    FOREIGN KEY (exhibit_id) REFERENCES exhibits(id)
+) COLLATE 'utf8mb3_general_ci';
+
+Select * From roles;
+Select * From users;
+Select * From services;
+Select * From orders;
+
+Select * From roles Where id = ?
+Select * From users Where id = ?
+Select * From services Where id = ?
+Select * From orders Where id = ?
+
+INSERT INTO `roles` (`type`, `description`) VALUES ('admins', 'administration');
+INSERT INTO `roles` (`type`, `description`) VALUES ('clients', 'all clients');
+INSERT INTO `roles` (`type`, `description`) VALUES ('specialists', 'specialist');
+
+UPDATE `roles` SET
+`id` = '4',
+`type` = 'admin',
+`description` = 'delete duplicate'
+WHERE `id` = '4';
+
+DELETE FROM `roles` WHERE ((`id` = '4'));
+
+INSERT INTO `users` (`first_name`, `last_name`, `comment`, `role_id`, `email`, `password`, `description`, `is_active`)
+VALUES ('Admin', 'Admin', 'God of SQL', '1', 'admin@ukr.net', '1234', NULL, CONV('1', 2, 10) + 0);
+INSERT INTO `users` (`first_name`, `last_name`, `comment`, `role_id`, `email`, `password`, `description`, `is_active`)
+VALUES ('User 1', 'Uservish', NULL, '2', 'test@test.com', '911', NULL, CONV('1', 2, 10) + 0);
+INSERT INTO `users` (`first_name`, `last_name`, `comment`, `role_id`, `email`, `password`, `description`, `is_active`)
+VALUES ('User 2', 'Agent777', NULL, '2', 'test2@test.com', '7777', NULL, CONV('1', 2, 10) + 0);
+INSERT INTO `users` (`first_name`, `last_name`, `comment`, `role_id`, `email`, `password`, `description`, `is_active`)
+VALUES ('Make', 'Specialist', NULL, '3', 'test3@test.com', 'pasword', NULL, CONV('1', 2, 10) + 0);
+INSERT INTO `users` (`first_name`, `last_name`, `comment`, `role_id`, `email`, `password`, `description`, `is_active`)
+VALUES ('James', 'Bond', 'agent 007', '2', '777@uk.com', 'mi5!password', '', CONV('1', 2, 10) + 0);
+
+UPDATE `users` SET
+`id` = '2',
+`first_name` = 'User 1',
+`last_name` = 'Petrovich',
+`comment` = 'bla bla bla',
+`role_id` = '2',
+`email` = 'test@test.com',
+`password` = '911',
+`description` = NULL,
+`is_active` = CONV('1', 2, 10) + 0
+WHERE `id` = '2';
+
+DELETE FROM `users` WHERE ((`id` = '5'));
+
+INSERT INTO `exhibits` (`title`, `description`, `specialist_id`, `price`, `published`)
+VALUES ('men\'s haircut', '', '4', '10.00', CONV('1', 2, 10) + 0);
+INSERT INTO `exhibits` (`title`, `description`, `specialist_id`, `price`, `published`)
+VALUES ('women\'s haircut', '', '4', '15.00', CONV('0', 2, 10) + 0);
+INSERT INTO `exhibits` (`title`, `description`, `specialist_id`, `price`, `published`)
+VALUES ('hair dyeing', '', '3', '5.00', CONV('0', 2, 10) + 0);
+
+UPDATE `exhibits` SET
+`id` = '3',
+`title` = 'Cup',
+`description` = 'Chine exponat',
+`specialist_id` = '3',
+`price` = '4.50',
+`published` = CONV('0', 2, 10) + 0
+WHERE `id` = '3';
+
+DELETE FROM `exhibits` WHERE ((`id` = '4'));
+
+INSERT INTO `halls` (`title`, `description`, `exhibit_id`, `created_at`) VALUES ('', '', 2, now());
+INSERT INTO `halls` (`title`, `description`, `exhibit_id`, `created_at`) VALUES ('', '', 1, now());
+INSERT INTO `halls` (`title`, `description`, `exhibit_id`, `created_at`) VALUES ('', '', 3, now());
+
+UPDATE `halls` SET
+`title` = '',
+`description` = '',
+`exhibit_id` = 3,
+`created_at` = '2023-02-11 10:06:07'
+WHERE `id` = '3';
+
+DELETE FROM `halls` WHERE ((`id` = '4'));
